@@ -16,7 +16,7 @@ elif len(sys.argv) == 3:
 else:
     print('---------------- INVALID USAGE ------------------')
     print('3 ARGUMENT Usage: python3 makecrate.py [crate_name] [excel_sheet_name].xlsx [output_directory ]')
-    print("2 ARGUMENT Usage: python3 makecrate.py [crate_name] [excel_sheet_name].xlsx [output_directory ]'")
+    print("2 ARGUMENT Usage: python3 makecrate.py [crate_name] [excel_sheet_name].xlsx ")
     sys.exit()
 
 
@@ -36,19 +36,20 @@ else:
 # Loop through each row in the Excel sheet
 for index, row in df.iterrows():
     # Construct the YouTube search query using song title and author
+    #TODO add a 'Rename' optional excel field for hard to access songs on Youtube
     query = row['Song Title'] + ' ' + row['Author'] + ' audio'
     print('Searching for:', query)
 
-    # Set the output directory to the folder where you want to save the songs
+    # Set the output paths to the folder where you want to save the songs to verify no duplicates
 
     output_path = os.path.join(folder_path, row['Song Title'] + ".mp3")
-
+    output_filename = os.path.join(folder_path, row['Song Title'])
 
     if os.path.exists(output_path):
          print('Song already exists, skipping download:', row['Song Title'] + ".mp3")
     else:
         # Search for the song on YouTube
-        ydl_opts = {'format': 'bestaudio/best', 'outtmpl': output_dir, 'postprocessors': [{'key': 'FFmpegExtractAudio','preferredcodec': 'mp3','preferredquality': '192',}],}
+        ydl_opts = {'format': 'bestaudio/best', 'outtmpl': output_filename, 'postprocessors': [{'key': 'FFmpegExtractAudio','preferredcodec': 'mp3','preferredquality': '192',}],}
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download(['ytsearch:' + query])
 
