@@ -36,14 +36,19 @@ else:
 # Loop through each row in the Excel sheet
 for index, row in df.iterrows():
     # Construct the YouTube search query using song title and author
-    #TODO add a 'Rename' optional excel field for hard to access songs on Youtube
     query = row['Song Title'] + ' ' + row['Author'] + ' audio'
     print('Searching for:', query)
-
     # Set the output paths to the folder where you want to save the songs to verify no duplicates
-
     output_path = os.path.join(folder_path, row['Song Title'] + ".mp3")
     output_filename = os.path.join(folder_path, row['Song Title'])
+
+    print(type(row['Rename']))
+    if type(row['Rename']) == str: #if rename value assigned in sheet
+        print("renaming to", row['Rename'])
+        rename = str(row['Rename'])
+        output_path = os.path.join(folder_path, rename + ".mp3")
+        output_filename = os.path.join(folder_path, rename)
+
 
     if os.path.exists(output_path):
          print('Song already exists, skipping download:', row['Song Title'] + ".mp3")
